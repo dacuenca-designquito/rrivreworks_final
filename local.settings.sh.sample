@@ -1,0 +1,11 @@
+# We should define below the credentials to be used by the other scripts
+
+# Change settings below, accordingly
+
+MYSQL_ROOT=root
+MYSQL_ROOT_PASSWORD=root_password
+
+MYSQL_USER=the_user
+MYSQL_PASSWORD=the_password
+
+DATABASE=the_database_name

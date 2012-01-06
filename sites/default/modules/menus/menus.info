@@ -1,0 +1,4 @@
+name = Menus
+description = "Menus of Categories and Subcategories"
+package = RrivreWorks
+core = 7.x

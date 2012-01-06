@@ -1,0 +1,4 @@
+name = Rrivreworks_Pages
+description = "RrivreWorks-Pages module"
+package = RrivreWorks
+core = 7.x

@@ -1,0 +1,4 @@
+name = Footer
+description = "Footer description for RrivreWorks"
+package = RrivreWorks
+core = 7.x

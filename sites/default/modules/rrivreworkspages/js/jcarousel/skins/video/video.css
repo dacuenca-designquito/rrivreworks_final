@@ -1,0 +1,37 @@
+.jcarousel-skin-video .jcarousel-direction-rtl {
+	direction: rtl;
+}
+
+.jcarousel-skin-video .jcarousel-container-horizontal {
+    width: 555px;
+    height: 373px;
+}
+
+.jcarousel-skin-video .jcarousel-clip {
+    overflow: hidden;
+}
+
+.jcarousel-skin-video .jcarousel-clip-horizontal {
+    width:  555px;
+    height: 373px;
+}
+
+.jcarousel-skin-video .jcarousel-item {
+    width: 555px;
+    height: 373px;
+}
+
+.jcarousel-skin-video .jcarousel-item-horizontal {
+	margin-left: 0;
+    margin-right: 0px;
+}
+
+.jcarousel-skin-video .jcarousel-direction-rtl .jcarousel-item-horizontal {
+	margin-left: 10px;
+    margin-right: 0;
+}
+
+.jcarousel-skin-video .jcarousel-item-placeholder {
+    background: #fff;
+    color: #000;
+}

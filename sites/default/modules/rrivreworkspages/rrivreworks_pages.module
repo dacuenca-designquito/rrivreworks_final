@@ -1,0 +1,735 @@
+<?php
+
+/**
+ * @file
+ * rrivreworks_pages module.
+ *
+ * Module used to create static footer description
+ */
+
+/**
+ * Implementation of hook_init().
+ */
+function rrivreworks_pages_init() {
+    /* Carousel JS */
+    drupal_add_js(drupal_get_path('module', 'rrivreworks_pages') . '/js/jcarousel/lib/jquery.jcarousel.js');
+    drupal_add_js(drupal_get_path('module', 'rrivreworks_pages') . '/js/jcarousel/lib/jquery.jcarousel.min.js');
+    drupal_add_js(drupal_get_path('module', 'rrivreworks_pages') . '/js/jcarousel/lib/animate.js');
+
+    /* Carousel CSS's */
+    drupal_add_css(drupal_get_path('module', 'rrivreworks_pages') . '/js/jcarousel/skins/photo/photo.css');
+    drupal_add_css(drupal_get_path('module', 'rrivreworks_pages') . '/js/jcarousel/skins/photo_thumbnail/photo_thumbnail.css');
+    drupal_add_css(drupal_get_path('module', 'rrivreworks_pages') . '/js/jcarousel/skins/info/info.css');
+    drupal_add_css(drupal_get_path('module', 'rrivreworks_pages') . '/js/jcarousel/skins/products/products.css');
+    drupal_add_css(drupal_get_path('module', 'rrivreworks_pages') . '/js/jcarousel/skins/product_photos/product_photos.css');
+    drupal_add_css(drupal_get_path('module', 'rrivreworks_pages') . '/js/jcarousel/skins/product_hero_photo/product_hero_photo.css');
+    drupal_add_css(drupal_get_path('module', 'rrivreworks_pages') . '/js/jcarousel/skins/collection_thumb/collection_thumb.css');
+    drupal_add_css(drupal_get_path('module', 'rrivreworks_pages') . '/js/jcarousel/skins/video_thumbnail/video_thumbnail.css');
+    drupal_add_css(drupal_get_path('module', 'rrivreworks_pages') . '/js/jcarousel/skins/video/video.css');
+
+    /* Each Carousel Implementation */
+    drupal_add_js('jQuery(document).ready(function() {
+        jQuery(".photo").jcarousel({
+            visible : 1,
+            scroll : 1, 
+            wrap : "both",
+            initCallback: photo_carousel_initCallback
+    }); }); ', 'inline');
+
+    drupal_add_js('jQuery(document).ready(function() {
+        jQuery(".photo-thumbnail").jcarousel({
+            visible : 5,
+            scroll : 1, 
+            wrap : "both",
+            vertical : true,
+    }); }); ', 'inline');
+
+    drupal_add_js('jQuery(document).ready(function() {
+        jQuery(".info").jcarousel({
+            visible : 1,
+            scroll : 1, 
+            wrap : "both",
+    }); }); ', 'inline');
+
+    drupal_add_js('jQuery(document).ready(function() {
+        jQuery(".other-products").jcarousel({
+            visible : 5,
+            scroll : 1, 
+            wrap : "both",
+    }); }); ', 'inline');
+
+    drupal_add_js('jQuery(document).ready(function() {
+        jQuery(".related-products").jcarousel({
+            visible : 5,
+            scroll : 1, 
+            wrap : "both",
+    }); }); ', 'inline');
+
+    drupal_add_js('jQuery(document).ready(function() {
+        jQuery(".product-photos").jcarousel({
+            visible : 4,
+            scroll : 1, 
+            wrap : "both",
+    }); }); ', 'inline');
+
+    drupal_add_js('jQuery(document).ready(function() {
+        jQuery(".product-hero-photo").jcarousel({
+            visible : 1,
+            scroll : 1, 
+            wrap : "both",
+            initCallback: product_hero_photo_carousel_initCallback
+    }); }); ', 'inline');
+
+    drupal_add_js('jQuery(document).ready(function() {
+        jQuery(".collection-thumb").jcarousel({
+            visible : 3,
+            scroll : 1, 
+            wrap : "both",
+    }); }); ', 'inline');
+
+    drupal_add_js('jQuery(document).ready(function() {
+        jQuery(".video").jcarousel({
+            visible : 1,
+            scroll : 1, 
+            wrap : "both",
+            initCallback: video_carousel_initCallback
+    }); }); ', 'inline');
+
+    drupal_add_js('jQuery(document).ready(function() {
+        jQuery(".video-thumbnail").jcarousel({
+            visible : 3,
+            scroll : 1, 
+            wrap : "both",
+            vertical : true,
+    }); }); ', 'inline');
+}
+
+/**
+ * Implementation of hook_block_info().
+ */
+function rrivreworks_pages_block_info() {
+
+    $blocks['SubCategory_Menu'] = array(
+        'info' => t('Block: SubCategory Menu')
+    );
+
+    $blocks['Photo Menu'] = array(
+        'info' => t('Block: Photo Menu')
+    );
+
+    $blocks['Video Menu'] = array(
+        'info' => t('Block: Video Menu')
+    );
+
+    $blocks['Collection Menu'] = array(
+        'info' => t('Block: Collection Menu')
+    );
+
+    $blocks['Category Menu'] = array(
+        'info' => t('Block: Category Menu')
+    );
+    $blocks['FooterInfo'] = array(
+        'info' => t('Block: FooterInfo')
+    );
+
+    $blocks['Social'] = array(
+        'info' => t('Block: Social Links')
+    );
+    /* PROVISIONAL */
+    $blocks['Provisional'] = array(
+        'info' => t('Block: Provisional Links')
+    );
+
+    return $blocks;
+}
+
+/**
+ * Implementation of hook_block_view().
+ */
+function rrivreworks_pages_block_view($delta = '') {
+    $block = array();
+    switch ($delta) {
+        case 'SubCategory_Menu':
+            $node = menu_get_object();
+            $nid = $node->nid;
+            $block['subject'] = '';
+            $block['content'] = drupal_render(_get_sub_category_menu($nid));
+            break;
+        case 'Photo Menu':
+            $node = menu_get_object();
+            $nid = $node->nid;
+            $block['subject'] = '';
+            $block['content'] = drupal_render(_get_photo_menu($nid));
+            break;
+        case 'Video Menu':
+            $node = menu_get_object();
+            $nid = $node->nid;
+            $block['subject'] = '';
+            $block['content'] = drupal_render(_get_video_menu($nid));
+            break;
+        case 'Collection Menu':
+            $node = menu_get_object();
+            $nid = $node->nid;
+            $block['subject'] = '';
+            $block['content'] = drupal_render(_get_collection_menu($nid));
+            break;
+        case 'Category Menu':
+            $node = menu_get_object();
+            $nid = $node->nid;
+            $block['subject'] = '';
+            $block['content'] = drupal_render(_get_category_menu($nid));
+            break;
+        case 'FooterInfo':
+            $block['subject'] = '';
+            $block['content'] = drupal_render(_footer_pages_block()) . '<br>';
+            break;
+        case 'Social':
+            $block['content'] = l(t('Facebook'), 'http://www.facebook.com/RrivreWorksInc', array('attributes' => array('target' => '_blank'))) . ' ';
+            $block['content'] .= l(t('Twitter'), 'http://twitter.com/Rrivreworks', array('attributes' => array('target' => '_blank'))) . ' ';
+            $block['content'] .= l(t('GooglePlus'), 'http://plus.google.com/114647746478722369902/posts', array('attributes' => array('target' => '_blank'))) . ' ';
+            $block['content'] .= l(t('Youtube'), 'http://www.youtube.com', array('attributes' => array('target' => '_blank'))) . ' ';
+            break;
+        /* PROVISIONAL */
+        case 'Provisional':
+            $block['content'] = l(t('Provisional Video Gallery'), 'http://' . $_SERVER['SERVER_NAME'] . '/node/316') . '<br>';
+            $block['content'] .= l(t('Provisional Bio Page'), 'http://' . $_SERVER['SERVER_NAME'] . '/node/324') . '<br>';
+            $block['content'] .= l(t('Provisional Team Page'), 'http://' . $_SERVER['SERVER_NAME'] . '/node/337') . '';
+            break;
+    }
+
+    return $block;
+}
+
+function _get_photo_menu($nid) {
+    $restCat = db_query("SELECT n.title, n.nid FROM {node} n WHERE n.type = 'photo_category' ORDER BY n.created ASC;");
+    $link = '';
+    foreach ($restCat as $cat) {
+        $ctitle = $cat->title;
+        $cid = $cat->nid;
+        $faid = $nid;
+        if (_get_first_photo_album_id($cid)) {
+            $faid = _get_first_photo_album_id($cid);
+            $link .= l(t($ctitle), 'node/' . $faid) . '<br>';
+        } else {
+            $link .= l(t($ctitle), 'node/' . $nid) . '<br>';
+        }
+        if (_is_photo_category_viewed($cid, $nid)) {
+            $resAlb = db_query('SELECT n.title, n.nid FROM {field_data_field_photo_category} c, {node} n WHERE c.field_photo_category_nid = :cid AND n.nid = c.entity_id ORDER BY n.created ASC;', array(':cid' => $cid));
+            $link .= '<div class = "photo-album-menu-links">';
+            foreach ($resAlb as $album) {
+                $atitle = $album->title;
+                $aid = $album->nid;
+                if ($aid == $nid) {
+                    $link .= '<div class = "selected-photo-album">';
+                    $link .= '&nbsp;&nbsp;&nbsp;' . l(t($atitle), 'node/' . $aid) . ' ►<br>';
+                    $link .= '</div>';
+                } else {
+                    $link .= '&nbsp;&nbsp;&nbsp;' . l(t($atitle), 'node/' . $aid) . '<br>';
+                }
+            }
+            $link .= '</div>';
+        }
+    }
+    $content = array(
+        '#preffix' => '<div class="photo-menu">',
+        '#suffix' => '</div>',
+        'title' => array(
+            '#type' => 'markup',
+            '#markup' => 'Photo Gallery',
+            '#prefix' => '<div class="photo-menu-title">',
+            '#suffix' => '</div>',
+        ),
+        'links' => array(
+            '#type' => 'markup',
+            '#markup' => $link,
+            '#prefix' => '<div class="photo-category-menu-links">',
+            '#suffix' => '</div>',
+        ),
+    );
+    return $content;
+}
+
+function _get_video_menu($nid) {
+    $restCat = db_query("SELECT n.title, n.nid FROM {node} n WHERE n.type = 'video_category' ORDER BY n.created ASC;");
+    $link = '';
+    foreach ($restCat as $cat) {
+        $ctitle = $cat->title;
+        $cid = $cat->nid;
+        $faid = $nid;
+        if (strcmp($ctitle, 'Bio Page Videos') != 0) {
+            if (_get_first_video_album_id($cid)) {
+                $faid = _get_first_video_album_id($cid);
+                $link .= l(t($ctitle), 'node/' . $faid) . '<br>';
+            } else {
+                $link .= l(t($ctitle), 'node/' . $nid) . '<br>';
+            }
+            if (_is_video_category_viewed($cid, $nid)) {
+                $resAlb = db_query('SELECT n.title, n.nid FROM {field_data_field_video_category} c, {node} n WHERE c.field_video_category_nid = :cid AND n.nid = c.entity_id ORDER BY n.created ASC;', array(':cid' => $cid));
+                $link .= '<div class = "video-album-menu-links">';
+                foreach ($resAlb as $album) {
+                    $atitle = $album->title;
+                    $aid = $album->nid;
+                    if ($aid == $nid) {
+                        $link .= '<div class = "selected-video-album">';
+                        $link .= '&nbsp;&nbsp;&nbsp;' . l(t($atitle), 'node/' . $aid) . ' ►<br>';
+                        $link .= '</div>';
+                    } else {
+                        $link .= '&nbsp;&nbsp;&nbsp;' . l(t($atitle), 'node/' . $aid) . '<br>';
+                    }
+                }
+                $link .= '</div>';
+            }
+        }
+    }
+    $content = array(
+        '#preffix' => '<div class="video-menu">',
+        '#suffix' => '</div>',
+        'title' => array(
+            '#type' => 'markup',
+            '#markup' => 'Video',
+            '#prefix' => '<div class="video-menu-title">',
+            '#suffix' => '</div>',
+        ),
+        'links' => array(
+            '#type' => 'markup',
+            '#markup' => $link,
+            '#prefix' => '<div class="video-category-menu-links">',
+            '#suffix' => '</div>',
+        ),
+    );
+    return $content;
+}
+
+function _get_collection_menu($nid) {
+    $resColl = db_query("SELECT n.title, n.nid FROM {node} n WHERE n.type = 'collection' ORDER BY n.created ASC;");
+    $link = '';
+    foreach ($resColl as $coll) {
+        $ctitle = $coll->title;
+        $cid = $coll->nid;
+        if ($cid == $nid) {
+            $link .= '<div class = "selected-collection">';
+            $link .= '► ' . l(t($ctitle), 'node/' . $cid) . '<br>';
+            $link .= '</div>';
+        } else {
+            $link .= l(t($ctitle), 'node/' . $cid) . '<br>';
+        }
+    }
+    $content = array(
+        '#preffix' => '<div class="collection-menu">',
+        '#suffix' => '</div>',
+        'links' => array(
+            '#type' => 'markup',
+            '#markup' => $link,
+            '#prefix' => '<div class="collection-menu-links">',
+            '#suffix' => '</div>',
+        ),
+    );
+    return $content;
+}
+
+function _get_category_menu($nid) {
+    $resCat = db_query("SELECT n.title, n.nid FROM {node} n, {field_data_field_menu_weigh}t m WHERE m.entity_id = n.nid AND type = 'category' ORDER BY m.field_menu_weight_value asc");
+    $link = '';
+    foreach ($resCat as $cat) {
+        $ctitle = $cat->title;
+        $cid = $cat->nid;
+        if ($cid == $nid) {
+            $link .= '<div class = "selected-category">';
+            $link .= '► ' . l(t($ctitle), 'node/' . $cid) . '<br>';
+            $link .= '</div>';
+        } else {
+            $link .= l(t($ctitle), 'node/' . $cid) . '<br>';
+        }
+    }
+    $content = array(
+        '#preffix' => '<div class="category-menu">',
+        '#suffix' => '</div>',
+        'links' => array(
+            '#type' => 'markup',
+            '#markup' => $link,
+            '#prefix' => '<div class="category-menu-links">',
+            '#suffix' => '</div>',
+        ),
+    );
+    return $content;
+}
+
+function _get_sub_category_menu($nid) {
+    $cid = 0;
+    $ctitle = db_query('SELECT n.nid, n.title FROM {node} n, {field_data_field_category} c WHERE c.entity_id = :nid AND c.field_category_nid = n.nid', array(':nid' => $nid))->fetchField($index = 1);
+    $cid = db_query('SELECT n.nid, n.title FROM {node} n, {field_data_field_category} c WHERE c.entity_id = :nid AND c.field_category_nid = n.nid', array(':nid' => $nid))->fetchField($index = 0);
+    if ($cid != 0) {
+        $result = db_query('SELECT n.title, n.nid FROM {field_data_field_category} c, {node} n, {field_data_field_menu_weight} m WHERE c.entity_id = n.nid AND c.field_category_nid = :nid AND m.entity_id = n.nid ORDER BY m.field_menu_weight_value asc', array(':nid' => $cid));
+        $link = '';
+        foreach ($result as $record) {
+            $stitle = $record->title;
+            $sid = $record->nid;
+            if ($sid == $nid) {
+                $link .= '<div class = "selected-sub-category">';
+                $link .= l(t($stitle), 'node/' . $sid) . ' ►<br>';
+                $link .= '</div>';
+            } else {
+                $link .= l(t($stitle), 'node/' . $sid) . '<br>';
+            }
+        }
+        $content = array(
+            '#preffix' => '<div class="subcategory-menu">',
+            '#suffix' => '</div>',
+            'title' => array(
+                '#type' => 'markup',
+                '#markup' => $ctitle,
+                '#prefix' => '<div class="sub-category-menu-title">',
+                '#suffix' => '</div>',
+            ),
+            'links' => array(
+                '#type' => 'markup',
+                '#markup' => $link,
+                '#prefix' => '<div class="sub-category-menu-links">',
+                '#suffix' => '</div>',
+            ),
+        );
+        return $content;
+    }
+    return array();
+}
+
+function _is_photo_category_viewed($cid, $nid) {
+    $result = db_query('SELECT c.field_photo_category_nid FROM {field_data_field_photo_category} c WHERE c.entity_id = :nid;', array(':nid' => $nid));
+    foreach ($result as $record) {
+        if ($cid == $record->field_photo_category_nid) {
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+function _is_video_category_viewed($cid, $nid) {
+    $result = db_query('SELECT c.field_video_category_nid FROM {field_data_field_video_category} c WHERE c.entity_id = :nid;', array(':nid' => $nid));
+    foreach ($result as $record) {
+        if ($cid == $record->field_video_category_nid) {
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+//Returns the first photo album id from a photo category id
+function _get_first_photo_album_id($cid) {
+    $result = db_query('SELECT n.nid FROM {field_data_field_photo_category} c, {node} n WHERE c.field_photo_category_nid = :cid AND n.nid = c.entity_id ORDER BY n.created ASC LIMIT 1;', array(':cid' => $cid));
+    foreach ($result as $record) {
+        return $record->nid;
+    }
+    return FALSE;
+}
+
+function _get_first_video_album_id($cid) {
+    $result = db_query('SELECT n.nid FROM {field_data_field_video_category} c, {node} n WHERE c.field_video_category_nid = :cid AND n.nid = c.entity_id ORDER BY n.created ASC LIMIT 1;', array(':cid' => $cid));
+    foreach ($result as $record) {
+        return $record->nid;
+    }
+    return FALSE;
+}
+
+function _footer_pages_block() {
+    $content = array(
+        '#preffix' => '<div class="footer-info">',
+        '#suffix' => '</div>',
+        'label' => array(
+            '#type' => 'markup',
+            '#markup' => '<div class="bkg-footer-main"></div><div class="footer-info-label">' .
+            'All event  and furniture designs reflected herein are owned exclusively by rrivre works, inc. and are  protected by law. All rights reserved<br> ' .
+            '&copy; 2009 rrivre works, inc. | ' .
+            l(t('info@rrivreworks.com'), 'mailto:info@rrivreworks.com', array('attributes' => array('target' => '_blank'))) .
+            ' | 323.985.4229' .
+            '</div>',
+        ),
+    );
+    return $content;
+}
+
+function computed_field_field_menu_weight_compute(&$entity_field, $entity_type, $entity, $field, $instance, $langcode, $items) {
+    $menuw = 0;
+    if (isset($entity->menu)) {
+        $menuw = intval($entity->menu["weight"]);
+        $entity_field[0]['value'] = $menuw;
+    }
+}
+
+function _get_node_id() {
+    $node = menu_get_object();
+    return $node->nid;
+}
+
+function _get_category_id_for_products() {
+    $node = menu_get_object();
+    if (_category_has_sub_category($node->nid)) {
+        return -1;
+    } else {
+        return $node->nid;
+    }
+}
+
+function _get_category_id_for_groups() {
+    $node = menu_get_object();
+    if (_category_has_groups($node->nid)) {
+        return $node->nid;
+    } else {
+        return -1;
+    }
+}
+
+function _get_collection_id_from_product() {
+    $node = menu_get_object();
+    $cid = -1;
+    $nid = $node->nid;
+    $result = db_query('SELECT f.field_collection_nid FROM {field_data_field_collection} f WHERE entity_id = :nid;', array(':nid' => $nid));
+    foreach ($result as $record) {
+        $cid = $record->field_collection_nid;
+    }
+    return $cid;
+}
+
+function _get_sub_category_id_from_product() {
+    $node = menu_get_object();
+    $sid = -1;
+    $nid = $node->nid;
+    if (_category_has_sub_category(_get_category_id_from_product_id($nid))) {
+        $result = db_query('SELECT s.field_sub_category_nid FROM {field_data_field_sub_category} s WHERE s.entity_id = :nid;', array(':nid' => $nid));
+        foreach ($result as $record) {
+            $sid = $record->field_sub_category_nid;
+        }
+    }
+    return $sid;
+}
+
+function _get_category_id_from_product_without_sub_category() {
+    $node = menu_get_object();
+    $sid = -1;
+    $nid = $node->nid;
+    if (_category_has_sub_category(_get_category_id_from_product_id($nid))) {
+        return $sid;
+    } else {
+        return _get_category_id_from_product_id($nid);
+    }
+}
+
+function _category_has_sub_category($nid) {
+    if (db_query("SELECT * FROM {field_data_field_sub_category} c WHERE c.entity_id = :nid AND bundle = 'category';", array(':nid' => $nid))->fetchField($index = 0) == false)
+        return false;
+    return true;
+}
+
+function _get_category_id_from_product_id($nid) {
+    return db_query('SELECT c.field_category_nid FROM {field_data_field_category} c WHERE c.entity_id = :nid;', array(':nid' => $nid))->fetchField();
+}
+
+function _category_has_groups($nid) {
+    if (db_query("SELECT c.entity_id FROM {field_data_field_category} c WHERE c.field_category_nid = :nid AND c.bundle = 'sub_category_group';", array(':nid' => $nid))->fetchField() == false)
+        return true;
+    return false;
+}
+
+function _sub_category_group_view($name_view, $data) {
+    // Load the view.
+    $nid = $data->nid;
+    $view = views_get_view($name_view, TRUE);
+    $view->set_arguments(array($nid));
+    $pager = $view->use_pager();
+    // Return view content
+    return $view->preview();
+}
+
+function _subcategory_for_groups() {
+    $a = '190';
+    return $a;
+}
+
+function _product_viewed($data) {
+    $node = menu_get_object();
+    if ($data->nid == $node->nid) {
+        return TRUE;
+    }
+    return FALSE;
+}
+
+function _photo_viewed($data) {
+    $node = menu_get_object();
+    if ($data->nid == $node->nid) {
+        return FALSE;
+    }
+    return TRUE;
+}
+
+//Computed field video thumbnail
+function computed_field_field_video_thumbnail_compute(&$entity_field, $entity_type, $entity, $field, $instance, $langcode, $items) {
+    $link = $entity->field_video['und']['0']['value'];
+    if (strrpos($link, 'youtube.com/watch?v=')) {
+        $pos = strrpos($link, 'youtube.com/watch?v=');
+        $vid = substr($link, 20 + $pos);
+    } else if (strrpos($link, 'youtu.be/')) {
+        $pos = strrpos($link, 'youtu.be/');
+        $vid = substr($link, 9 + $pos);
+    }
+    while (strrpos($vid, '&')) {
+        $pos = strrpos($vid, '&');
+        $vid = substr($vid, 0, $pos);
+    }
+    $entity_field[0]['value'] = $vid;
+}
+
+//Computed field video code
+function computed_field_field_video_code_compute(&$entity_field, $entity_type, $entity, $field, $instance, $langcode, $items) {
+    $link = $entity->field_video['und']['0']['value'];
+    if (strrpos($link, 'youtube.com/watch?v=')) {
+        $pos = strrpos($link, 'youtube.com/watch?v=');
+        $vid = substr($link, 20 + $pos);
+    } else if (strrpos($link, 'youtu.be/')) {
+        $pos = strrpos($link, 'youtu.be/');
+        $vid = substr($link, 9 + $pos);
+    }
+    while (strrpos($vid, '&')) {
+        $pos = strrpos($vid, '&');
+        $vid = substr($vid, 0, $pos);
+    }
+    $entity_field[0]['value'] = $vid;
+}
+
+/**
+ * Implementation of hook_form_alter().
+ * Search word change
+ * Youtube Embebed Video Validation
+ */
+function rrivreworks_pages_form_alter(&$form, &$form_state, $form_id) {
+    if ($form_id == 'search_block_form') {
+        $form['actions']['submit']['#value'] = t('Go ►'); // Change the text on the submit button
+    }
+    if ($form_id == 'video_node_form') { //Change webform id according to you webformid
+        $form['#validate'][] = 'field_video_validate';
+        return $form;
+    }
+}
+
+//Function to validate a video embebed code
+function field_video_validate($form, &$form_state) {
+    $videoval = $form_state['values']['field_video']['und']['0']['value']; //Get the video value of the form
+    if (!strrpos($videoval, 'youtube.com/watch?v=') && !strrpos($videoval, 'youtu.be/')) {  //Validate the video value
+        form_set_error('field_video', 'Please fill Video with a youtube embebed code'); //Generates an error
+    }
+}
+
+/**
+ * Implementation of hook_menu_breadcrumb_alter().
+ */
+function rrivreworks_pages_menu_breadcrumb_alter(&$active_trail, $item) {
+    if (isset($item['map']['1']->type)) {
+        if ($item['map']['1']->type == 'collection') {
+            $aux = $active_trail['1'];
+            $collections = array('title' => 'Collections', 'href' => 'node/' . _get_first_collection_id(), 'localized_options' => array());
+            $active_trail['1'] = $collections;
+            $active_trail['2'] = $aux;
+        }
+        if ($item['map']['1']->type == 'sub_category') {
+            $node = menu_get_object();
+            $nid = $node->nid;
+            $aux = $active_trail['1'];
+            $cid = db_query('SELECT n.nid FROM {node} n, {field_data_field_category} c WHERE c.entity_id = :nid AND c.field_category_nid = n.nid', array(':nid' => $nid))->fetchField();
+            $ctitle = db_query('SELECT n.nid, n.title FROM {node} n, {field_data_field_category} c WHERE c.entity_id = :nid AND c.field_category_nid = n.nid', array(':nid' => $nid))->fetchField($index = 1);
+            $category = array('title' => $ctitle, 'href' => 'node/' . $cid, 'localized_options' => array());
+            $active_trail['1'] = $category;
+            $active_trail['2'] = $aux;
+        }
+        if ($item['map']['1']->type == 'product') {
+            $node = menu_get_object();
+            $nid = $node->nid;
+            $aux = $active_trail['1'];
+            $ctitle = db_query('SELECT n.title FROM field_data_field_category c, node n WHERE c.field_category_nid = n.nid and c.entity_id = :nid;', array(':nid' => $nid))->fetchField();
+            $cid = db_query('SELECT n.nid FROM field_data_field_category c, node n WHERE c.field_category_nid = n.nid and c.entity_id = :nid;', array(':nid' => $nid))->fetchField();
+            $category = array('title' => $ctitle, 'href' => 'node/' . $cid, 'localized_options' => array());
+            $active_trail['1'] = $category;
+            $active_trail['2'] = $aux;
+        }
+
+        if ($item['map']['1']->type == 'photo_album') {
+            $node = menu_get_object();
+            $nid = $node->nid;
+            $aux = $active_trail['1'];
+            $cid = db_query("SELECT n.nid, n.title FROM node n, field_data_field_photo_category c WHERE c.field_photo_category_nid = n.nid AND c.entity_id =:nid", array(':nid' => $nid))->fetchField($index = 0);
+            $ctitle = db_query("SELECT n.nid, n.title FROM node n, field_data_field_photo_category c WHERE c.field_photo_category_nid = n.nid AND c.entity_id =:nid", array(':nid' => $nid))->fetchField($index = 1);
+            $category = array('title' => $ctitle, 'href' => 'node/' . _get_first_photo_album_id($cid), 'localized_options' => array());
+            $active_trail['2'] = $category;
+            $active_trail['1'] = array('title' => 'Photo Gallery', 'href' => 'node/' . _get_first_photo_album(), 'localized_options' => array());
+            $active_trail['3'] = $aux;
+        }
+
+        if ($item['map']['1']->type == 'video_album') {
+            $node = menu_get_object();
+            $nid = $node->nid;
+            $aux = $active_trail['1'];
+            $cid = db_query("SELECT n.nid, n.title FROM node n, field_data_field_video_category c WHERE c.field_video_category_nid = n.nid AND c.entity_id =:nid", array(':nid' => $nid))->fetchField($index = 0);
+            $ctitle = db_query("SELECT n.nid, n.title FROM node n, field_data_field_video_category c WHERE c.field_video_category_nid = n.nid AND c.entity_id =:nid", array(':nid' => $nid))->fetchField($index = 1);
+            $category = array('title' => $ctitle, 'href' => 'node/' . _get_first_video_album_id($cid), 'localized_options' => array());
+            $active_trail['2'] = $category;
+            $active_trail['1'] = array('title' => 'Video', 'href' => 'node/' . _get_first_video_album(), 'localized_options' => array());
+            $active_trail['3'] = $aux;
+        }
+    }
+}
+
+//Returns the first collection id
+function _get_first_collection_id() {
+    return db_query("SELECT nid FROM {node} n WHERE n.type = 'collection' ORDER BY n.created asc LIMIT 1;")->fetchField();
+}
+
+//Returns the first product category id
+function _get_first_category_id() {
+    return db_query("SELECT nid FROM {node} n WHERE n.type = 'category' ORDER BY n.created asc LIMIT 1;")->fetchField();
+}
+
+//Returns the first photo album of the first photo category
+function _get_first_photo_album() {
+    $fcid = db_query("SELECT n.nid FROM {node} n WHERE n.type = 'photo_category' ORDER BY n.created LIMIT 1")->fetchField();
+    $faid = db_query("SELECT n.nid FROM {node} n, {field_data_field_photo_category} c WHERE n.nid = c.entity_id AND n.type = 'photo_album' AND c.field_photo_category_nid = :nid ORDER BY n.created LIMIT 1", array(':nid' => $fcid))->fetchField();
+    return $faid;
+}
+
+//Returns the first video album of the first video category
+function _get_first_video_album() {
+    $fcid = db_query("SELECT n.nid FROM {node} n WHERE n.type = 'video_category' ORDER BY n.created LIMIT 1")->fetchField();
+    $faid = db_query("SELECT n.nid FROM {node} n, {field_data_field_video_category} c WHERE n.nid = c.entity_id AND n.type = 'video_album' AND c.field_video_category_nid = :nid ORDER BY n.created LIMIT 1", array(':nid' => $fcid))->fetchField();
+    return $faid;
+}
+
+//Returns the title of a Photo Category, when and Photo Album is viewd
+function _get_photo_category_title() {
+    $node = menu_get_object();
+    if (isset($node->nid)) {
+        $nid = $node->nid;
+        $ctitle = db_query("SELECT n.title FROM node n, field_data_field_photo_category c WHERE n.nid = c.field_photo_category_nid AND c.entity_id = :nid", array(':nid' => $nid))->fetchField();
+        return '<div class="photo-album-title">' . $ctitle . '</div>';
+    }
+}
+
+//Returns the title of a Video Category, when and Video Album is viewd
+function _get_video_category_title() {
+    $node = menu_get_object();
+    if (isset($node->nid)) {
+        $nid = $node->nid;
+        $ctitle = db_query("SELECT n.title FROM node n, field_data_field_video_category c WHERE n.nid = c.field_video_category_nid AND c.entity_id = :nid", array(':nid' => $nid))->fetchField();
+        return '<div class="video-album-title">' . $ctitle . '</div>';
+    }
+}
+
+//Return the node id of the home page's video
+function _get_video_from_home_page() {
+    return db_query("SELECT v.field_home_page_video_nid FROM field_data_field_home_page_video v LIMIT 1")->fetchField();
+}
+
+/*
+ * Implementation of hook_menu_alter
+
+
+function rrivreworks_pages_menu_alter(&$items) {
+    $a = 1;
+}
+ 
+ */

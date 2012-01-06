@@ -1,0 +1,32 @@
+#Local settings
+local.settings.php
+local.settings.sh
+local.backup.sh
+local.restore.sh
+local.credentials.sh
+#eclipse specific files
+.project
+.classpath
+.buildpath
+#netbeans specific files
+nbproject/
+htdocs/nbproject/
+#temp files
+*~
+#mac files
+.DS_Store
+#svn folders
+.svn/
+#window files
+Thumbs.db
+thumbs.db
+htdocs/tmp/*
+.settings/
+mydocs/
+
+
+htdocs/sites/default/local.settings.php.sample
+htdocs/sites/default/local.dbfr-settings.php
+
+scripts/correr.sh
+

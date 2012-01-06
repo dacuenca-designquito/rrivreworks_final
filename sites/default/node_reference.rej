@@ -1,0 +1,20 @@
+--- node_reference.module
++++ node_reference.module
+@@ -158,11 +158,13 @@
+   // Explode the 'args' string into an actual array. Beware, explode() turns an
+   // empty string into an array with one empty string. We'll need an empty array
+   // instead.
+-  $args_string = trim($element['args']['#value']);
+-  $args = ($args_string === '') ? array() : array_map('trim', explode(',', $args_string));
++  if (!empty($element['args']['#value'])) {
++    $args_string = trim($element['args']['#value']);
++    $args = ($args_string === '') ? array() : array_map('trim', explode(',', $args_string));
+ 
+-  $value = array('view_name' => $view, 'display_name' => $display, 'args' => $args);
+-  form_set_value($element, $value, $form_state);
++    $value = array('view_name' => $view, 'display_name' => $display, 'args' => $args);
++    form_set_value($element, $value, $form_state);
++  }
+ }
+ 
+ /**
